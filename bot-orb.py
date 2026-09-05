@@ -99,17 +99,23 @@ def monitor_breakout(high, low):
 
         time.sleep(10)
 
+# === ВЕБ-СЕРВЕР (с поддержкой HEAD) ===
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
         self.wfile.write(b"OK")
 
+    def do_HEAD(self):
+        self.send_response(200)
+        self.end_headers()
+
 def run_webserver():
     port = int(os.environ.get("PORT", 8000))
     server = HTTPServer(("0.0.0.0", port), Handler)
     server.serve_forever()
 
+# === ЗАПУСК ===
 if __name__ == "__main__":
     Thread(target=run_webserver, daemon=True).start()
     send_telegram("✅ ORB Бот запущен! Жду 16:45 по МСК...")
